@@ -30,25 +30,25 @@ const Stopwatch = (props: {
   onSave?: Function;
   simple?: boolean;
   savable?: boolean;
-  onStartAll?: boolean;
-  onStopAll?: boolean;
+  onGlobalHandlers?: { onStartAll?: boolean; onStopAll?: boolean };
 }) => {
-  const { id, simple, savable, onSave, onStartAll, onStopAll } = props;
-  const { timer, isActive, isPaused, handleStart, handlePause, handleResume, handleReset } = useTimer(0);
+  const { id, simple, savable, onSave, onGlobalHandlers = {} } = props;
+  const { onStartAll, onStopAll } = onGlobalHandlers;
+  const { timer, isActive, isPaused, handleStartPause, handleReset } = useTimer(0);
 
   const handleSave = React.useCallback(() => {
     onSave?.(id, timer);
     handleReset();
-    handleStart();
-  }, [id, timer, onSave, handleReset, handleStart]);
+    handleStartPause(true);
+  }, [id, timer, onSave, handleReset, handleStartPause]);
 
   const prevOnStartAll = ReactU.usePrevious(onStartAll);
   const prevOnStopAll = ReactU.usePrevious(onStopAll);
   React.useEffect(() => {
-    if (prevOnStartAll !== undefined && onStartAll !== prevOnStartAll && !isActive && !isPaused) {
-      handleStart();
+    if (prevOnStartAll !== undefined && onStartAll !== prevOnStartAll) {
+      handleStartPause();
     }
-  }, [handleStart, onStartAll, prevOnStartAll, isActive, isPaused]);
+  }, [handleStartPause, onStartAll, prevOnStartAll, isActive, isPaused]);
 
   React.useEffect(() => {
     if (prevOnStopAll !== undefined && onStopAll !== prevOnStopAll) {
@@ -56,31 +56,27 @@ const Stopwatch = (props: {
     }
   }, [handleReset, onStopAll, prevOnStopAll, isActive, isPaused]);
 
+  const param =
+    !isActive && !isPaused
+      ? { color: 'info', title: 'Start', icon: <PlayArrowIcon /> }
+      : isPaused
+      ? { color: 'warning', title: 'Pause', icon: <PauseIcon /> }
+      : { color: 'secondary', title: 'Resume', icon: <PlayArrowIcon /> };
+
   return (
     <Grid item>
       <Item sx={(theme) => ({ px: { xs: 0, md: theme.spacing(2) } })}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
+        <Typography component="h2" variant="h6" color="primary"  >
+          <Typography color="green">
+            <b>{id}</b>
+          </Typography>
           {formatTime(timer)}
         </Typography>
         <ButtonGroup disableElevation>
-          <Button disabled>
-            <Typography color="green">
-              <b>{id}</b>
-            </Typography>
+          <Button onClick={handleStartPause} color={param.color as any} endIcon={!simple && param.icon}>
+            {simple ? param.icon : param.title}
           </Button>
-          {!isActive && !isPaused ? (
-            <Button onClick={handleStart} color="info" endIcon={!simple && <PlayArrowIcon />}>
-              {simple ? <PlayArrowIcon /> : 'Start'}
-            </Button>
-          ) : isPaused ? (
-            <Button onClick={handlePause} color="warning" endIcon={!simple && <PauseIcon />}>
-              {simple ? <PauseIcon /> : 'Pause'}
-            </Button>
-          ) : (
-            <Button onClick={handleResume} color="secondary" endIcon={!simple && <PlayArrowIcon />}>
-              {simple ? <PlayArrowIcon /> : 'Resume'}
-            </Button>
-          )}
+
           {savable && (!isActive || isPaused) ? (
             <Button onClick={handleSave} disabled={!isActive} color="success" endIcon={!simple && <SaveIcon />}>
               {simple ? <SaveIcon /> : 'Save'}

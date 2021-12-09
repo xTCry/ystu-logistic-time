@@ -31,7 +31,7 @@ import TableRow from '@mui/material/TableRow';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { experimentalStyled as styled } from '@mui/material/styles';
 
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 
 import QStepper, { qSteps } from './components/QStepper.component';
@@ -196,7 +196,7 @@ const AppContent = (props: { handleBack; payload: any }) => {
     }
   }, [workShiftTotalTimes, workShiftCount, setWorkShiftTotalTimes]);
 
-  const [onStartAll, handleStartAll] = ReactU.useToggle(false);
+  const [onStartAll, handleStartPauseAll] = ReactU.useToggle(false);
   const [onStopAll, handleStopAll] = ReactU.useToggle(false);
 
   React.useEffect(() => {
@@ -266,20 +266,15 @@ const AppContent = (props: { handleBack; payload: any }) => {
             </Typography> */}
 
             <ButtonGroup disableElevation sx={{ mb: 1 }} fullWidth>
-              <Button onClick={handleStartAll} color="info" endIcon={<PlayArrowIcon />}>
-                Start All
+              <Button onClick={handleStartPauseAll} color="secondary" endIcon={<PlayIcon />}>
+                Start Or Pause All
               </Button>
               <Button onClick={handleStopAll} color="error" endIcon={<StopIcon />}>
                 Stop All
               </Button>
             </ButtonGroup>
 
-            <Grid
-              container
-              justifyContent="center"
-              spacing={{ xs: 1, md: 3 }}
-              columns={3}
-            >
+            <Grid container justifyContent="center" spacing={{ xs: 1, md: 3 }} columns={3}>
               {Array.from(Array(totalOperatorsCount)).map((_, index) => (
                 <Stopwatch
                   key={index}
@@ -287,8 +282,7 @@ const AppContent = (props: { handleBack; payload: any }) => {
                   onSave={onEnd}
                   simple
                   savable
-                  onStartAll={onStartAll}
-                  onStopAll={onStopAll}
+                  onGlobalHandlers={{ onStartAll, onStopAll }}
                 />
               ))}
             </Grid>
@@ -314,16 +308,18 @@ const AppContent = (props: { handleBack; payload: any }) => {
         </Grid>
       </Grid>
 
-      {<Grid container spacing={1}>
-        <Grid item xs={12}>
-          <MyPaper>
-            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-              <b>График</b>
-            </Typography>
-            <Typography component="p">скоро здесь будет %%график%%</Typography>
-          </MyPaper>
+      {
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <MyPaper>
+              <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                <b>График</b>
+              </Typography>
+              <Typography component="p">скоро здесь будет %%график%%</Typography>
+            </MyPaper>
+          </Grid>
         </Grid>
-      </Grid>}
+      }
     </>
   );
 };
