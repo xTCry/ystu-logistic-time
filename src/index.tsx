@@ -1,14 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { IntlProvider } from 'react-intl';
+
 import './index.css';
 import App from './App';
+import { YandexMetrika } from './components/YandexMetrika.component';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <IntlProvider locale={'ru'}>
+      <App />
+      <YandexMetrika />
+    </IntlProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
