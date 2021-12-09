@@ -8,21 +8,22 @@ import { version as appVersion } from '../../package.json';
 const buildTimestamp: number = preval`module.exports = Date.now();`;
 
 const VersionComponent = () => (
-  <div>
+  <>
     {appVersion}
     {'-T'}
     {String(buildTimestamp).slice(-10)} {'('}
     <FormattedDate day="2-digit" hour="2-digit" minute="2-digit" value={new Date(buildTimestamp)} />
     {')'}
-  </div>
+  </>
 );
 
 const Footer = () => (
   <Typography variant="body2" color="textSecondary" align="center" marginY={3}>
     Copyright ©{' '}
     <Link color="inherit" href="https://github.com/xTCry/ystu-logistic-time" target="_blank">
-       LogisticTimer (GIT)
+      LogisticTimer (GIT)
     </Link>{' '}
+    <br />
     <VersionComponent />
   </Typography>
 );
