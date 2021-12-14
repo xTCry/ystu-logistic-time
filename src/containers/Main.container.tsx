@@ -9,11 +9,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import AppContent from './components/AppContent.component';
-import InitialWorkSettings from './components/InitialWorkSettings.component';
-import Footer from './components/Footer.component';
+import AppContainer from './App.container';
+import InitialWorkSettings from '../components/InitialWorkSettings.component';
+import Footer from '../components/Footer.component';
 
-const App = () => {
+const MainContainer = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(
@@ -47,7 +47,7 @@ const App = () => {
 
       <Box pt={4}>
         <InitialWorkSettings>
-          <AppContent />
+          <AppContainer />
         </InitialWorkSettings>
       </Box>
 
@@ -56,4 +56,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default MainContainer;

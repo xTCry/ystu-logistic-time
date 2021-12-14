@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 
 import { formatTime } from '../utils';
 
-const WorkShiftTimeTable = (props: { rows: any[] }) => {
+const WorkShiftTimeTable = (props: { rows: { id: number; times: number[] }[] }) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -28,7 +28,9 @@ const WorkShiftTimeTable = (props: { rows: any[] }) => {
               </TableCell>
               <TableCell>{row.times.length}</TableCell>
               <TableCell align="right">
-                {formatTime(Math.floor(row.times.reduce((a, b) => a + b, 0) / row.times.length))}
+                {row.times.length === 0
+                  ? '-'
+                  : formatTime(Math.floor(row.times.reduce((a, b) => a + b, 0) / row.times.length))}
               </TableCell>
             </TableRow>
           ))}

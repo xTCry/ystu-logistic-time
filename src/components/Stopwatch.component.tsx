@@ -66,14 +66,14 @@ const Stopwatch = (props: {
   return (
     <Grid item>
       <Item sx={(theme) => ({ px: { xs: 0, md: theme.spacing(2) } })}>
-        <Typography component="h2" variant="h6" color="primary"  >
+        <Typography component="h2" variant="h6" color="primary">
           <Typography color="green">
             <b>{id}</b>
           </Typography>
           {formatTime(timer)}
         </Typography>
         <ButtonGroup disableElevation>
-          <Button onClick={handleStartPause} color={param.color as any} endIcon={!simple && param.icon}>
+          <Button onClick={() => handleStartPause()} color={param.color as any} endIcon={!simple && param.icon}>
             {simple ? param.icon : param.title}
           </Button>
 

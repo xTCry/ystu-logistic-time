@@ -1,5 +1,6 @@
 import React from 'react';
 import * as ReactU from 'react-use';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -17,82 +18,75 @@ import StopIcon from '@mui/icons-material/Stop';
 
 import { MyPaper } from '../styled/MyPaper.styled';
 
-import Stopwatch from './Stopwatch.component';
-import WorkShiftTimeTable from './WorkShiftTimeTable.component';
+import Stopwatch from '../components/Stopwatch.component';
+import WorkShiftTimeTable from '../components/WorkShiftTimeTable.component';
 
-const AppContent = (props: { handleBack?; payload?: any }) => {
-  const {
-    handleBack: handleBackToSetting,
-    payload: {
-      workShiftCount,
-      totalOperatorsCount,
-      workShiftStep,
-      setWorkShiftStep,
-      workShiftTotalTimes,
-      setWorkShiftTotalTimes,
-    },
-  } = props;
+import workSlice from '../store/reducers/work/work.slice';
+
+const AppContainer = (props: { handleBack? }) => {
+  const { handleBack: handleBackToSetting } = props;
+
+  const dispatch = useDispatch();
+  const workState = useSelector((state) => state.work);
+  const { totalOperatorsCount, workShiftCount, workShiftStep, workShifts } = workState;
+  const { operatorsCount } = workShifts[workShiftStep] || {};
 
   const workShiftSteps = React.useMemo(
     () => Array.from(Array(workShiftCount)).map((_, e) => `Cмена ${e + 1}`),
     [workShiftCount],
   );
 
-  const onEnd = React.useCallback(
+  const onSaveTimer = React.useCallback(
     (id: number, timer: number) => {
-      setWorkShiftTotalTimes((data) => {
-        if (!Array.isArray(data[workShiftStep][id - 1])) {
-          data[workShiftStep][id - 1] = [];
-        }
-        data[workShiftStep][id - 1].push(timer);
-        return [...data];
-      });
+      dispatch(workSlice.actions.onSaveTimer({ id, timer }));
     },
-    [workShiftStep, setWorkShiftTotalTimes],
+    [dispatch],
   );
 
   const handleNextWorkShift = React.useCallback(() => {
-    setWorkShiftStep((e) => ++e);
-  }, [setWorkShiftStep]);
+    dispatch(workSlice.actions.nextStep());
+  }, [dispatch]);
 
   const handlePrevWorkShift = React.useCallback(() => {
-    setWorkShiftStep((e) => --e);
-  }, [setWorkShiftStep]);
+    dispatch(workSlice.actions.prevStep());
+  }, [dispatch]);
 
   const handleResetTimes = React.useCallback(() => {
-    setWorkShiftTotalTimes((data) => {
-      data[workShiftStep] = [];
-      return [...data];
-    });
-  }, [workShiftStep, setWorkShiftTotalTimes]);
+    dispatch(workSlice.actions.handleResetTimes());
+  }, [dispatch]);
 
-  const updateWorkShiftTimes = React.useCallback(() => {
-    if (workShiftTotalTimes.length > workShiftCount) {
-      setWorkShiftTotalTimes((data) => data.slice(0, workShiftCount));
-    } else if (workShiftTotalTimes.length < workShiftCount) {
-      setWorkShiftTotalTimes((data) => [...data, ...Array.from(Array(workShiftCount - data.length)).map((e) => [])]);
-    }
-  }, [workShiftTotalTimes, workShiftCount, setWorkShiftTotalTimes]);
+  // const handleInitOperators = React.useCallback(
+  //   (operators: any[]) => {
+  //     dispatch(workSlice.actions.initOperators({ operators }));
+  //   },
+  //   [dispatch],
+  // );
 
   const [onStartAll, handleStartPauseAll] = ReactU.useToggle(false);
   const [onStopAll, handleStopAll] = ReactU.useToggle(false);
 
   React.useEffect(() => {
-    updateWorkShiftTimes();
-  }, [workShiftCount, setWorkShiftTotalTimes, updateWorkShiftTimes]);
+    dispatch(workSlice.actions.updateWorkShifts());
+  }, [dispatch, workShiftCount]);
 
   React.useEffect(() => {
-    updateWorkShiftTimes();
-  }, [updateWorkShiftTimes]);
+    dispatch(workSlice.actions.updateWorkShiftOperators());
+  }, [dispatch, operatorsCount]);
 
-  const tableRows = workShiftTotalTimes[workShiftStep]?.map((e, i) => ({ id: i + 1, times: e })) || [];
+  React.useEffect(() => {
+    // only for first step
+    dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
+  }, [dispatch, totalOperatorsCount]);
+
+  const tableRows = workShifts[workShiftStep]?.operators.map((e) => ({ id: e.id, times: [...e.times] })) || [];
+  tableRows.sort((a, b) => a.id - b.id);
 
   return (
     <Container component="main" maxWidth="lg">
       <Grid container spacing={1}>
         <Grid item xs={12} md={8}>
           <MyPaper>
-            <Button onClick={handleBackToSetting}>Back to setting</Button>
+            <Button onClick={handleBackToSetting}>Назад к настройкам</Button>
           </MyPaper>
 
           {/* WorkShift Stepper */}
@@ -109,10 +103,10 @@ const AppContent = (props: { handleBack?; payload?: any }) => {
             </Stepper>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {workShiftStep > 0 && <Button onClick={handlePrevWorkShift}>Back</Button>}
+              {workShiftStep > 0 && <Button onClick={handlePrevWorkShift}>Назад</Button>}
               {workShiftStep < workShiftCount - 1 ? (
                 <Button variant="contained" onClick={handleNextWorkShift}>
-                  Next
+                  Дальше
                 </Button>
               ) : (
                 <Button
@@ -145,10 +139,10 @@ const AppContent = (props: { handleBack?; payload?: any }) => {
 
             <ButtonGroup disableElevation sx={{ mb: 1 }} fullWidth>
               <Button onClick={handleStartPauseAll} color="secondary" endIcon={<PlayIcon />}>
-                Start Or Pause All
+                Запустить/Приостановить все
               </Button>
               <Button onClick={handleStopAll} color="error" endIcon={<StopIcon />}>
-                Stop All
+                Остановить все
               </Button>
             </ButtonGroup>
 
@@ -157,7 +151,7 @@ const AppContent = (props: { handleBack?; payload?: any }) => {
                 <Stopwatch
                   key={index}
                   id={index + 1}
-                  onSave={onEnd}
+                  onSave={onSaveTimer}
                   simple
                   savable
                   onGlobalHandlers={{ onStartAll, onStopAll }}
@@ -175,7 +169,6 @@ const AppContent = (props: { handleBack?; payload?: any }) => {
             <Typography component="p">
               Среднее время работы операторов <b>{workShiftStep + 1}</b> смены
             </Typography>
-            {/* <Typography component="p">{JSON.stringify(workShiftTotalTimes)}</Typography> */}
             <WorkShiftTimeTable rows={tableRows} />
 
             <Divider />
@@ -186,20 +179,18 @@ const AppContent = (props: { handleBack?; payload?: any }) => {
         </Grid>
       </Grid>
 
-      {
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <MyPaper>
-              <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                <b>График</b>
-              </Typography>
-              <Typography component="p">скоро здесь будет %%график%%</Typography>
-            </MyPaper>
-          </Grid>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <MyPaper>
+            <Typography component="h2" variant="h6" color="primary" gutterBottom>
+              <b>График</b>
+            </Typography>
+            <Typography component="p">скоро здесь будет %%график%%</Typography>
+          </MyPaper>
         </Grid>
-      }
+      </Grid>
     </Container>
   );
 };
 
-export default AppContent;
+export default AppContainer;

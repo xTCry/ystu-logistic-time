@@ -1,18 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { IntlProvider } from 'react-intl';
+import { Router } from 'react-router';
+
+import store, { history } from './store';
 
 import './index.css';
-import App from './App';
+import MainContainer from './containers/Main.container';
 import { YandexMetrika } from './components/YandexMetrika.component';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <IntlProvider locale={'ru'}>
-      <App />
-      <YandexMetrika />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale={'ru'}>
+        <Router history={history}>
+          <MainContainer />
+        </Router>
+        <YandexMetrika />
+      </IntlProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

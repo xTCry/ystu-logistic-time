@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -14,23 +15,26 @@ import QStepper, { qSteps } from './QStepper.component';
 
 import { MyPaper } from '../styled/MyPaper.styled';
 
-const StepsWorkSetting = (props: { activeStep: number; payload: any }) => {
-  const {
-    payload: { workShiftCount, totalOperatorsCount, setWorkShiftCount, setTotalOperatorsCount },
-  } = props;
+import workSlice from '../store/reducers/work/work.slice';
+
+const StepsWorkSetting = (props: { activeStep: number }) => {
+  const dispatch = useDispatch();
+  const { totalOperatorsCount, workShiftCount } = useSelector((state) => state.work);
 
   const changeWorkShiftCount = React.useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
-      setWorkShiftCount(Math.max(2, Math.min(Math.floor(+event.target.value), 5)));
+      let val = event.target.value === '' ? null : Math.max(2, Math.min(Math.floor(+event.target.value), 5));
+      dispatch(workSlice.actions.setWorkShiftCount(val));
     },
-    [setWorkShiftCount],
+    [dispatch],
   );
 
   const changeOperstorsCount = React.useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
-      setTotalOperatorsCount(Math.max(2, Math.min(Math.floor(+event.target.value), 15)));
+      let val = event.target.value === '' ? null : Math.max(2, Math.min(Math.floor(+event.target.value), 15));
+      dispatch(workSlice.actions.setTotalOperatorsCount(val));
     },
-    [setTotalOperatorsCount],
+    [dispatch],
   );
 
   switch (props.activeStep) {
@@ -84,24 +88,6 @@ const StepsWorkSetting = (props: { activeStep: number; payload: any }) => {
 const InitialWorkSettings = (props: { children: any }) => {
   const { children } = props;
 
-  const [workShiftCount, setWorkShiftCount] = React.useState(3);
-  const [totalOperatorsCount, setTotalOperatorsCount] = React.useState(10);
-
-  const [workShiftStep, setWorkShiftStep] = React.useState(0);
-  const [workShiftTotalTimes, setWorkShiftTotalTimes] = React.useState([]);
-  // const [workShiftData, setWorkShiftData] = React.useState([]);
-
-  const payload = {
-    workShiftCount,
-    setWorkShiftCount,
-    totalOperatorsCount,
-    setTotalOperatorsCount,
-    workShiftStep,
-    setWorkShiftStep,
-    workShiftTotalTimes,
-    setWorkShiftTotalTimes,
-  };
-
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = React.useCallback(() => {
@@ -120,22 +106,22 @@ const InitialWorkSettings = (props: { children: any }) => {
         </Typography>
         <QStepper sx={{ pt: 3, pb: 5 }} activeStep={activeStep} />
 
-        <StepsWorkSetting activeStep={activeStep} payload={payload} />
+        <StepsWorkSetting activeStep={activeStep} />
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           {activeStep !== 0 && (
             <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-              Back
+              Назад
             </Button>
           )}
           <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }}>
-            {activeStep === qSteps.length - 1 ? 'Enjoy' : 'Next'}
+            {activeStep === qSteps.length - 1 ? 'Enjoy' : 'Дальше'}
           </Button>
         </Box>
       </Paper>
     </Container>
   ) : (
-    React.cloneElement(children, { payload, handleBack })
+    React.cloneElement(children, { handleBack })
   );
 };
 
