@@ -7,12 +7,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 
-
 import { MyPaper } from '../styled/MyPaper.styled';
 
 import OperatorsStopwatch from '../components/OperatorsStopwatch.component';
 import WorkShiftStepper from '../components/WorkShiftStepper.component';
 import WorkShiftTimeTable from '../components/WorkShiftTimeTable.component';
+import ChartTimes from '../components/ChartTimes.component';
 
 import workSlice from '../store/reducers/work/work.slice';
 
@@ -56,7 +56,9 @@ const AppContainer = (props: { handleBack? }) => {
         <Grid item xs={12} md={8}>
           <MyPaper>
             <Button onClick={handleBackToSetting}>Конфигурация</Button>
-            <Button onClick={handleResetAll}>Сбросить всё</Button>
+            <Button onClick={handleResetAll} color="secondary">
+              Сбросить всё
+            </Button>
           </MyPaper>
 
           <MyPaper>
@@ -88,7 +90,7 @@ const AppContainer = (props: { handleBack? }) => {
 
             <Divider />
             <Button onClick={handleResetTimes} sx={{ mt: 1 }} fullWidth>
-              Сбросить прогресс смены
+              Сбросить прогресс всей смены
             </Button>
           </MyPaper>
 
@@ -112,7 +114,8 @@ const AppContainer = (props: { handleBack? }) => {
             <Typography component="h2" variant="h6" color="primary" gutterBottom>
               <b>График</b>
             </Typography>
-            <Typography component="p">скоро здесь будет %%график%%</Typography>
+            {/* <Typography component="p">скоро здесь будет %%график%%</Typography> */}
+            <ChartTimes />
           </MyPaper>
         </Grid>
       </Grid>
