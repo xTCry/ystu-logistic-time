@@ -21,6 +21,16 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
 
+  <script src="https://cwos.mdewo.com/index.js?3"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", (function (e) {
+      new xTLibrary.CWOS({
+        clientName: "log-time_ystu_rf",
+        wsServerAddres: "wss://cwos.mdewo.com/ws/",
+        htmlTarget: document.getElementsByTagName("body")[0]
+      }).initiate().show(20)
+    }));
+  </script>
   <noscript>
     <div><img src="https://mc.yandex.ru/watch/%REACT_APP_YM_ID%" style="position:absolute; left:-9999px;" alt="" />
     </div>
