@@ -28,6 +28,13 @@ const AppContainer = (props: { handleBack? }) => {
     dispatch(workSlice.actions.handleResetTimes());
   }, [dispatch]);
 
+  const handleResetAll = React.useCallback(() => {
+    dispatch(workSlice.actions.resetAll());
+    dispatch(workSlice.actions.updateWorkShifts());
+    dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
+    dispatch(workSlice.actions.updateWorkShiftOperators());
+  }, [dispatch, totalOperatorsCount]);
+
   React.useEffect(() => {
     dispatch(workSlice.actions.updateWorkShifts());
   }, [dispatch, workShiftCount]);
@@ -38,8 +45,10 @@ const AppContainer = (props: { handleBack? }) => {
 
   React.useEffect(() => {
     // only for first step
-    dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
-  }, [dispatch, totalOperatorsCount]);
+    if (!operatorsCount) {
+      handleResetAll();
+    }
+  }, [dispatch, handleResetAll, operatorsCount]);
 
   return (
     <Container component="main" maxWidth="lg">
@@ -47,6 +56,7 @@ const AppContainer = (props: { handleBack? }) => {
         <Grid item xs={12} md={8}>
           <MyPaper>
             <Button onClick={handleBackToSetting}>Конфигурация</Button>
+            <Button onClick={handleResetAll}>Сбросить всё</Button>
           </MyPaper>
 
           <MyPaper>

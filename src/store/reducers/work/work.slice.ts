@@ -16,6 +16,25 @@ export const workSlice = createSlice({
   name: 'work',
   initialState: (store2.get(STORE2_KEY) || initialState) as IWork,
   reducers: {
+    resetAll: (state) => {
+      // for (let key of Object.keys(state)) {
+      //   delete state[key];
+      // }
+      // for (let key of Object.keys(initialState)) {
+      //   state[key] = initialState[key];
+      // }
+      for (const key of ['totalOperatorsCount', 'workShiftCount', 'workShiftStep']) {
+        state[key] = initialState[key];
+      }
+      state.workShifts = [
+        // {
+        //   id: 1,
+        //   operatorsCount: 0,
+        //   operators: [],
+        // },
+      ]; //initialState.workShifts.slice(0, 1);
+      save2(state);
+    },
     setWorkShiftCount: (state, action: PayloadAction<IWork['workShiftCount']>) => {
       state.workShiftCount = action.payload;
       save2(state);
