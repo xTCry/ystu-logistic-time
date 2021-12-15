@@ -19,7 +19,7 @@ const useTimer = (initialState = 0) => {
         setTimer(0);
       }
     },
-    [isPaused,setIsActive, setTimer, handlePause],
+    [isPaused, setIsActive, setTimer, handlePause],
   );
 
   const handleResume = React.useCallback(() => {
