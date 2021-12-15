@@ -1,7 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,9 +10,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
+import ResetIcon from '@mui/icons-material/Undo';
+
+import workSlice from '../store/reducers/work/work.slice';
 import { formatTime } from '../utils';
 
 const WorkShiftTimeTable = () => {
+  const dispatch = useDispatch();
   const workState = useSelector((state) => state.work);
   const { workShifts, workShiftStep } = workState;
 
@@ -31,6 +36,13 @@ const WorkShiftTimeTable = () => {
     return [childIds, rows];
   }, [workShifts, workShiftStep]);
 
+  const handleResetTimes = React.useCallback(
+    (id: number) => () => {
+      dispatch(workSlice.actions.handleResetTimesById({id}));
+    },
+    [dispatch],
+  );
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -39,28 +51,37 @@ const WorkShiftTimeTable = () => {
             <TableCell>Оператор №</TableCell>
             <TableCell>N</TableCell>
             <TableCell align="right">AVG</TableCell>
+            <TableCell> </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => {
-            const isChild = childIds.includes(row.id);
+            const { id, parentIds, times } = row;
+            const isChild = childIds.includes(id);
             return (
               <TableRow
-                key={row.id}
+                key={id}
                 sx={(theme) => ({
                   '&:last-child td, &:last-child th': { border: 0 },
                   ...(isChild && { backgroundColor: theme.palette.action.hover }),
                 })}
               >
                 <TableCell component="th" scope="row">
-                  {row.id}
-                  {row.parentIds.length > 0 && ` (${row.parentIds.join(', ')})`}
+                  {id}
+                  {parentIds.length > 0 && ` (${parentIds.join(', ')})`}
                 </TableCell>
-                <TableCell>{isChild ? '-' : row.times.length}</TableCell>
+                <TableCell>{isChild ? '-' : times.length}</TableCell>
                 <TableCell align="right">
-                  {row.times.length === 0 || isChild
+                  {times.length === 0 || isChild
                     ? '-'
-                    : formatTime(Math.floor(row.times.reduce((a, b) => a + b, 0) / row.times.length))}
+                    : formatTime(Math.floor(times.reduce((a, b) => a + b, 0) / times.length))}
+                </TableCell>
+                <TableCell align="right">
+                  {!isChild && (
+                    <Button onClick={handleResetTimes(id)} color="secondary" disabled={times.length === 0}>
+                      <ResetIcon />
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             );

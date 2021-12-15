@@ -91,6 +91,14 @@ export const workSlice = createSlice({
       }
       save2(state);
     },
+    handleResetTimesById: (state, action: PayloadAction<{ id: number }>) => {
+      const { operators } = state.workShifts[state.workShiftStep];
+      let operatorIndex = operators.findIndex((e) => e.id === action.payload.id);
+      if (operatorIndex !== -1) {
+        operators[operatorIndex].times.splice(-1, 1);
+      }
+      save2(state);
+    },
     updateWorkShifts: (state) => {
       if (state.workShifts.length > state.workShiftCount) {
         state.workShifts.splice(state.workShiftCount - state.workShifts.length);
