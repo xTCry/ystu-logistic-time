@@ -2,7 +2,7 @@ import { YMInitializer } from 'react-yandex-metrika';
 
 export const YandexMetrika = () => {
     const YM_ID = Number(process.env.REACT_APP_YM_ID);
-    if (!YM_ID) return null;
+    if (!YM_ID || process.env.NODE_ENV !== 'production') return null;
 
     return (
         <>
