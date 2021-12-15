@@ -26,11 +26,22 @@ export const workSlice = createSlice({
       workShift.operatorsCount = action.payload.operators.length;
       workShift.operators = [...action.payload.operators];
     },
+    updateParentOperators: (state, action: PayloadAction<{ id: number; parentIds: number[]; step?: number }>) => {
+      const { operators } = state.workShifts[state.workShiftStep];
+      let operatorIndex = operators.findIndex((e) => e.id === action.payload.id);
+
+      if (operatorIndex === -1) {
+        operatorIndex = operators.push({ id: action.payload.id, parentIds: [], times: [] });
+        --operatorIndex;
+      }
+
+      operators[operatorIndex].parentIds = action.payload.parentIds;
+    },
     nextStep: (state) => {
-      ++state.workShiftStep;
+      if (state.workShiftStep < state.workShifts.length - 1) ++state.workShiftStep;
     },
     prevStep: (state) => {
-      --state.workShiftStep;
+      if (state.workShiftStep > 0) --state.workShiftStep;
     },
     onSaveTimer: (state, action: PayloadAction<{ id: number; timer: number }>) => {
       const { operators } = state.workShifts[state.workShiftStep];

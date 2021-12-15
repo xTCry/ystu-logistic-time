@@ -7,10 +7,6 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import Divider from '@mui/material/Divider';
 
 import PlayIcon from '@mui/icons-material/PlayArrow';
@@ -19,6 +15,7 @@ import StopIcon from '@mui/icons-material/Stop';
 import { MyPaper } from '../styled/MyPaper.styled';
 
 import Stopwatch from '../components/Stopwatch.component';
+import WorkShiftStepper from '../components/WorkShiftStepper.component';
 import WorkShiftTimeTable from '../components/WorkShiftTimeTable.component';
 
 import workSlice from '../store/reducers/work/work.slice';
@@ -31,11 +28,6 @@ const AppContainer = (props: { handleBack? }) => {
   const { totalOperatorsCount, workShiftCount, workShiftStep, workShifts } = workState;
   const { operatorsCount } = workShifts[workShiftStep] || {};
 
-  const workShiftSteps = React.useMemo(
-    () => Array.from(Array(workShiftCount)).map((_, e) => `Cмена ${e + 1}`),
-    [workShiftCount],
-  );
-
   const onSaveTimer = React.useCallback(
     (id: number, timer: number) => {
       dispatch(workSlice.actions.onSaveTimer({ id, timer }));
@@ -43,24 +35,9 @@ const AppContainer = (props: { handleBack? }) => {
     [dispatch],
   );
 
-  const handleNextWorkShift = React.useCallback(() => {
-    dispatch(workSlice.actions.nextStep());
-  }, [dispatch]);
-
-  const handlePrevWorkShift = React.useCallback(() => {
-    dispatch(workSlice.actions.prevStep());
-  }, [dispatch]);
-
   const handleResetTimes = React.useCallback(() => {
     dispatch(workSlice.actions.handleResetTimes());
   }, [dispatch]);
-
-  // const handleInitOperators = React.useCallback(
-  //   (operators: any[]) => {
-  //     dispatch(workSlice.actions.initOperators({ operators }));
-  //   },
-  //   [dispatch],
-  // );
 
   const [onStartAll, handleStartPauseAll] = ReactU.useToggle(false);
   const [onStopAll, handleStopAll] = ReactU.useToggle(false);
@@ -78,9 +55,6 @@ const AppContainer = (props: { handleBack? }) => {
     dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
   }, [dispatch, totalOperatorsCount]);
 
-  const tableRows = workShifts[workShiftStep]?.operators.map((e) => ({ id: e.id, times: [...e.times] })) || [];
-  tableRows.sort((a, b) => a.id - b.id);
-
   return (
     <Container component="main" maxWidth="lg">
       <Grid container spacing={1}>
@@ -91,34 +65,7 @@ const AppContainer = (props: { handleBack? }) => {
 
           {/* WorkShift Stepper */}
           <MyPaper>
-            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-              <b>Рабочая смена</b>
-            </Typography>
-            <Stepper activeStep={workShiftStep} sx={{ pt: 3, pb: 5 }} alternativeLabel>
-              {workShiftSteps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {workShiftStep > 0 && <Button onClick={handlePrevWorkShift}>Назад</Button>}
-              {workShiftStep < workShiftCount - 1 ? (
-                <Button variant="contained" onClick={handleNextWorkShift}>
-                  Дальше
-                </Button>
-              ) : (
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    alert('Wohooh!');
-                  }}
-                >
-                  Finish
-                </Button>
-              )}
-            </Box>
+            <WorkShiftStepper />
           </MyPaper>
         </Grid>
       </Grid>
@@ -167,7 +114,7 @@ const AppContainer = (props: { handleBack? }) => {
             <Typography component="p">
               Среднее время работы операторов <b>{workShiftStep + 1}</b> смены
             </Typography>
-            <WorkShiftTimeTable rows={tableRows} />
+            <WorkShiftTimeTable />
 
             <Divider />
             <Button onClick={handleResetTimes} sx={{ mt: 1 }} fullWidth>
