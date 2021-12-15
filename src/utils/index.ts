@@ -5,3 +5,7 @@ export const formatTime = (timer: number) => {
 
   return [...(!!hours ? [hours] : []), minutes, seconds].map((e) => String(e).padStart(2, '0')).join(' : ');
 };
+
+export const declOfNum = (n: number, titles: string[]) =>
+  titles[n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2];
+

@@ -13,6 +13,7 @@ import OperatorsStopwatch from '../components/OperatorsStopwatch.component';
 import WorkShiftStepper from '../components/WorkShiftStepper.component';
 import WorkShiftTimeTable from '../components/WorkShiftTimeTable.component';
 import ChartTimes from '../components/ChartTimes.component';
+import OperatorNumber from '../components/OperatorNumber.component';
 
 import workSlice from '../store/reducers/work/work.slice';
 
@@ -116,6 +117,9 @@ const AppContainer = (props: { handleBack? }) => {
             </Typography>
             {/* <Typography component="p">скоро здесь будет %%график%%</Typography> */}
             <ChartTimes />
+
+            <Divider sx={{ my: 2 }} />
+            <OperatorNumber />
           </MyPaper>
         </Grid>
       </Grid>

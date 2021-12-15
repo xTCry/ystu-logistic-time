@@ -6,6 +6,7 @@ const STORE2_KEY = 'STATE_work';
 const save2 = (state) => store2.set(STORE2_KEY, state);
 
 const initialState: IWork = {
+  var_T: 120,
   totalOperatorsCount: 10,
   workShiftCount: 3,
   workShiftStep: 0,
@@ -33,6 +34,10 @@ export const workSlice = createSlice({
         //   operators: [],
         // },
       ]; //initialState.workShifts.slice(0, 1);
+      save2(state);
+    },
+    setVar_T: (state, action: PayloadAction<number>) => {
+      state.var_T = action.payload;
       save2(state);
     },
     setWorkShiftCount: (state, action: PayloadAction<IWork['workShiftCount']>) => {

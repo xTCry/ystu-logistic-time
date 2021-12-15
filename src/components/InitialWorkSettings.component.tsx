@@ -19,7 +19,7 @@ import workSlice from '../store/reducers/work/work.slice';
 
 const StepsWorkSetting = (props: { activeStep: number }) => {
   const dispatch = useDispatch();
-  const { totalOperatorsCount, workShiftCount } = useSelector((state) => state.work);
+  const { var_T, totalOperatorsCount, workShiftCount } = useSelector((state) => state.work);
 
   const changeWorkShiftCount = React.useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
@@ -33,6 +33,14 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
     (event: React.ChangeEvent<{ value: string }>) => {
       let val = event.target.value === '' ? null : Math.max(2, Math.min(Math.floor(+event.target.value), 15));
       dispatch(workSlice.actions.setTotalOperatorsCount(val));
+    },
+    [dispatch],
+  );
+
+  const changeVar_T = React.useCallback(
+    (event: React.ChangeEvent<{ value: string }>) => {
+      let val = event.target.value === '' ? null : Math.max(1, Math.min(Math.floor(+event.target.value), 9e3));
+      dispatch(workSlice.actions.setVar_T(val));
     },
     [dispatch],
   );
@@ -59,6 +67,7 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
           <FormControl fullWidth>
             <Input type="number" value={workShiftCount} onChange={changeWorkShiftCount} />
           </FormControl>
+          <FormHelperText>(после изменения данные могут быть утеряны)</FormHelperText>
         </MyPaper>
       );
 
@@ -76,7 +85,24 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
               onChange={changeOperstorsCount}
               endAdornment={<InputAdornment position="end">мест</InputAdornment>}
             />
-            <FormHelperText>(после повторного изменения данные могут быть утеряны)</FormHelperText>
+            <FormHelperText>(после изменения данные могут быть утеряны)</FormHelperText>
+          </FormControl>
+        </MyPaper>
+      );
+
+    case 3:
+      return (
+        <MyPaper>
+          <Typography component="h2" variant="h6" color="primary" gutterBottom>
+            <b>Константы и Переменные</b>
+          </Typography>
+          <FormControl fullWidth>
+            <Input
+              type="number"
+              value={var_T}
+              onChange={changeVar_T}
+              endAdornment={<InputAdornment position="end">сек</InputAdornment>}
+            />
           </FormControl>
         </MyPaper>
       );

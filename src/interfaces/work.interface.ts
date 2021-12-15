@@ -1,4 +1,5 @@
 export interface IWork {
+  var_T: number;
   workShiftCount: number;
   workShiftStep: number;
   totalOperatorsCount: number;

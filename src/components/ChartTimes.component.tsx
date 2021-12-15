@@ -38,7 +38,7 @@ const options = {
 };
 
 const ChartTimes = () => {
-  const { totalOperatorsCount, workShifts } = useSelector((state) => state.work);
+  const { totalOperatorsCount, workShifts, var_T } = useSelector((state) => state.work);
 
   const labels = React.useMemo(
     () => Array.from(Array(totalOperatorsCount)).map((_, e) => `${e + 1}`),
@@ -102,7 +102,7 @@ const ChartTimes = () => {
         borderWidth: 1,
         fill: false,
         borderDash: [5, 5],
-        data: labels.map(() => 120),
+        data: labels.map(() => var_T),
       },
       ...datasetsWork,
     ],

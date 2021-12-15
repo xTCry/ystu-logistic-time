@@ -10,6 +10,7 @@ import { StepIconProps } from '@mui/material/StepIcon';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import ConstantsIcon from '@mui/icons-material/Construction';
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -61,6 +62,7 @@ const ColorlibStepIcon = (props: StepIconProps) => {
     1: <VideoLabelIcon />,
     2: <SettingsIcon />,
     3: <GroupAddIcon />,
+    4: <ConstantsIcon />,
   };
 
   return (
@@ -70,7 +72,7 @@ const ColorlibStepIcon = (props: StepIconProps) => {
   );
 };
 
-export const qSteps = ['Знакомство', 'Распорядок дня', 'Операторы'];
+export const qSteps = ['Знакомство', 'Распорядок дня', 'Операторы', 'Константы'];
 
 const QStepper = (props: StepperProps) => (
   <Stepper {...props} alternativeLabel connector={<ColorlibConnector />}>
