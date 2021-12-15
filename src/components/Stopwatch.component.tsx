@@ -52,7 +52,7 @@ const Stopwatch = (props: {
 
   React.useEffect(() => {
     if (prevOnStopAll !== undefined && onStopAll !== prevOnStopAll) {
-      handleReset();
+      handleReset(true);
     }
   }, [handleReset, onStopAll, prevOnStopAll, isActive, isPaused]);
 
@@ -65,7 +65,7 @@ const Stopwatch = (props: {
 
   return (
     <Grid item>
-      <Item sx={(theme) => ({ px: { xs: 0, md: theme.spacing(2) } })}>
+      <Item sx={(theme) => ({ px: { xs: theme.spacing(1), md: theme.spacing(2) } })}>
         <Typography component="h2" variant="h6" color="primary">
           <Typography color="green">
             <b>{id}</b>

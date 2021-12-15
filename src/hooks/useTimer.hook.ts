@@ -11,11 +11,16 @@ const useTimer = (initialState = 0) => {
     setIsPaused(null);
   }, [countRef, setIsPaused]);
 
-  const handleReset = React.useCallback(() => {
-    handlePause();
-    setIsActive(false);
-    setTimer(0);
-  }, [setIsActive, setTimer, handlePause]);
+  const handleReset = React.useCallback(
+    (resettable = false) => {
+      handlePause();
+      setIsActive(false);
+      if (!resettable || !isPaused) {
+        setTimer(0);
+      }
+    },
+    [isPaused,setIsActive, setTimer, handlePause],
+  );
 
   const handleResume = React.useCallback(() => {
     if (countRef.current) clearInterval(countRef.current);

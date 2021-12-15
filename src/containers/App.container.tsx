@@ -130,19 +130,17 @@ const AppContainer = (props: { handleBack? }) => {
             <Typography component="h6">Отмечайте начало и конец выполнения работы оператора</Typography>
           </MyPaper>
           <MyPaper>
+            {/* TODO: split to ext comp */}
             <Typography component="h2" variant="h6" color="primary" gutterBottom>
               <b>Секундомер</b>
             </Typography>
-            {/* <Typography component="h6" mb={1}>
-                Работа операторов
-              </Typography> */}
 
-            <ButtonGroup disableElevation sx={{ mb: 1 }} fullWidth>
+            <ButtonGroup disableElevation sx={{ mb: 1 }} fullWidth orientation="vertical">
               <Button onClick={handleStartPauseAll} color="secondary" endIcon={<PlayIcon />}>
                 Запустить/Приостановить все
               </Button>
               <Button onClick={handleStopAll} color="error" endIcon={<StopIcon />}>
-                Остановить все
+                Остановить/Сбросить все
               </Button>
             </ButtonGroup>
 
