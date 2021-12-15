@@ -23,7 +23,8 @@ const AppContainer = (props: { handleBack? }) => {
   const dispatch = useDispatch();
   const workState = useSelector((state) => state.work);
   const { totalOperatorsCount, workShiftCount, workShiftStep, workShifts } = workState;
-  const { operatorsCount } = workShifts[workShiftStep] || {};
+  const { operators } = workShifts[workShiftStep] || {};
+  const operatorsCount = operators.length;
 
   const handleResetTimes = React.useCallback(() => {
     dispatch(workSlice.actions.handleResetTimes());
@@ -33,7 +34,6 @@ const AppContainer = (props: { handleBack? }) => {
     dispatch(workSlice.actions.resetAll());
     dispatch(workSlice.actions.updateWorkShifts());
     if (totalOperatorsCount) {
-      dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
       dispatch(workSlice.actions.updateWorkShiftOperators());
     }
   }, [dispatch, totalOperatorsCount]);
@@ -43,8 +43,10 @@ const AppContainer = (props: { handleBack? }) => {
   }, [dispatch, workShiftCount]);
 
   React.useEffect(() => {
-    dispatch(workSlice.actions.updateWorkShiftOperators());
-  }, [dispatch, operatorsCount]);
+    if (totalOperatorsCount) {
+      dispatch(workSlice.actions.updateWorkShiftOperators());
+    }
+  }, [dispatch, workShiftCount, totalOperatorsCount, operatorsCount]);
 
   React.useEffect(() => {
     // only for first step

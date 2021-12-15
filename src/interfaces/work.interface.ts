@@ -1,14 +1,13 @@
 export interface IWork {
   var_T: number;
-  workShiftCount: number;
   workShiftStep: number;
+  workShiftCount: number;
   totalOperatorsCount: number;
   workShifts: IWorkShift[];
 }
 
 export interface IWorkShift {
   id: number;
-  operatorsCount: number;
   operators: IOperator[];
 }
 
