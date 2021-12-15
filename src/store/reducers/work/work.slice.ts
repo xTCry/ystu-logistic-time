@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import store2 from 'store2';
 import { IWork, IOperator } from '../../../interfaces/work.interface';
+
+const STORE2_KEY = 'STATE_work';
+const save2 = (state) => store2.set(STORE2_KEY, state);
 
 const initialState: IWork = {
   totalOperatorsCount: 10,
@@ -10,21 +14,25 @@ const initialState: IWork = {
 
 export const workSlice = createSlice({
   name: 'work',
-  initialState,
+  initialState: (store2.get(STORE2_KEY) || initialState) as IWork,
   reducers: {
     setWorkShiftCount: (state, action: PayloadAction<IWork['workShiftCount']>) => {
       state.workShiftCount = action.payload;
+      save2(state);
     },
     setTotalOperatorsCount: (state, action: PayloadAction<IWork['totalOperatorsCount']>) => {
       state.totalOperatorsCount = action.payload;
+      save2(state);
     },
     setOperatorsCount: (state, action: PayloadAction<{ count: number; step?: number }>) => {
       state.workShifts[action.payload.step ?? state.workShiftStep].operatorsCount = action.payload.count;
+      save2(state);
     },
     initOperators: (state, action: PayloadAction<{ operators: IOperator[]; step?: number }>) => {
       const workShift = state.workShifts[action.payload.step ?? state.workShiftStep];
       workShift.operatorsCount = action.payload.operators.length;
       workShift.operators = [...action.payload.operators];
+      save2(state);
     },
     updateParentOperators: (state, action: PayloadAction<{ id: number; parentIds: number[]; step?: number }>) => {
       const { operators } = state.workShifts[state.workShiftStep];
@@ -36,12 +44,15 @@ export const workSlice = createSlice({
       }
 
       operators[operatorIndex].parentIds = action.payload.parentIds;
+      save2(state);
     },
     nextStep: (state) => {
       if (state.workShiftStep < state.workShifts.length - 1) ++state.workShiftStep;
+      save2(state);
     },
     prevStep: (state) => {
       if (state.workShiftStep > 0) --state.workShiftStep;
+      save2(state);
     },
     onSaveTimer: (state, action: PayloadAction<{ id: number; timer: number }>) => {
       const { operators } = state.workShifts[state.workShiftStep];
@@ -52,12 +63,14 @@ export const workSlice = createSlice({
       }
 
       operators[operatorIndex].times.push(action.payload.timer);
+      save2(state);
     },
     handleResetTimes: (state) => {
       // state.workShifts[state.workShiftStep].operators = [];
       for (const op of state.workShifts[state.workShiftStep].operators) {
         op.times = [];
       }
+      save2(state);
     },
     updateWorkShifts: (state) => {
       if (state.workShifts.length > state.workShiftCount) {
@@ -72,9 +85,11 @@ export const workSlice = createSlice({
           })),
         ];
       }
+      save2(state);
     },
     updateWorkShiftOperators: (state) => {
-      const { operators, operatorsCount } = state.workShifts[state.workShiftStep];
+      const { operators, operatorsCount } = state.workShifts[state.workShiftStep] || {};
+      if (!operators) return;
 
       if (operators.length > operatorsCount) {
         operators.splice(operatorsCount - operators.length);
@@ -90,6 +105,7 @@ export const workSlice = createSlice({
           })),
         ];
       }
+      save2(state);
     },
   },
 });
