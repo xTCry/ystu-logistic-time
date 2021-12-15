@@ -92,13 +92,17 @@ const AppContainer = (props: { handleBack? }) => {
             </Button>
           </MyPaper>
 
-          <Divider />
-          <MyPaper>
-            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-              <b>DEBUG</b>
-            </Typography>
-            <Typography component="pre">{JSON.stringify(workState, null, 2)}</Typography>
-          </MyPaper>
+          {process.env.NODE_ENV === 'development' && (
+            <>
+              <Divider />
+              <MyPaper>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  <b>DEBUG</b>
+                </Typography>
+                <Typography component="pre">{JSON.stringify(workState, null, 2)}</Typography>
+              </MyPaper>
+            </>
+          )}
         </Grid>
       </Grid>
 
