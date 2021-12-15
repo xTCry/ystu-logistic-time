@@ -84,6 +84,7 @@ const WorkShiftStepper = () => {
           </Button>
         ) : (
           <Button
+            disabled
             variant="outlined"
             color="success"
             onClick={() => {

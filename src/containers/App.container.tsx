@@ -32,12 +32,14 @@ const AppContainer = (props: { handleBack? }) => {
   const handleResetAll = React.useCallback(() => {
     dispatch(workSlice.actions.resetAll());
     dispatch(workSlice.actions.updateWorkShifts());
-    dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
-    dispatch(workSlice.actions.updateWorkShiftOperators());
+    if (totalOperatorsCount) {
+      dispatch(workSlice.actions.setOperatorsCount({ count: totalOperatorsCount, step: 0 }));
+      dispatch(workSlice.actions.updateWorkShiftOperators());
+    }
   }, [dispatch, totalOperatorsCount]);
 
   React.useEffect(() => {
-    dispatch(workSlice.actions.updateWorkShifts());
+    workShiftCount && dispatch(workSlice.actions.updateWorkShifts());
   }, [dispatch, workShiftCount]);
 
   React.useEffect(() => {
