@@ -26,13 +26,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Stopwatch = (props: {
-  id: number;
+  id?: number;
   onSave?: Function;
   simple?: boolean;
   savable?: boolean;
   onGlobalHandlers?: { onStartAll?: boolean; onStopAll?: boolean };
 }) => {
-  const { id, simple, savable, onSave, onGlobalHandlers = {} } = props;
+  const { id = null, simple, savable, onSave, onGlobalHandlers = {} } = props;
   const { onStartAll, onStopAll } = onGlobalHandlers;
   const { timer, isActive, isPaused, handleStartPause, handleReset } = useTimer(0);
 
@@ -64,31 +64,32 @@ const Stopwatch = (props: {
       : { color: 'secondary', title: 'Resume', icon: <PlayArrowIcon /> };
 
   return (
-    <Grid item>
-      <Item sx={(theme) => ({ px: { xs: theme.spacing(1), md: theme.spacing(2) } })}>
-        <Typography component="h2" variant="h6" color="primary">
+    <Item sx={(theme) => ({ px: { xs: theme.spacing(1) } })}>
+      <Typography component="h2" variant="h6" color="primary">
+        {id !== null && (
           <Typography color="green">
             <b>{id}</b>
           </Typography>
-          {formatTime(timer)}
-        </Typography>
-        <ButtonGroup disableElevation>
-          <Button onClick={() => handleStartPause()} color={param.color as any} endIcon={!simple && param.icon}>
-            {simple ? param.icon : param.title}
-          </Button>
+        )}
+        {formatTime(timer)}
+      </Typography>
 
-          {savable && (!isActive || isPaused) ? (
-            <Button onClick={handleSave} disabled={!isActive} color="success" endIcon={!simple && <SaveIcon />}>
-              {simple ? <SaveIcon /> : 'Save'}
-            </Button>
-          ) : (
-            <Button onClick={handleReset} disabled={!isActive} color="error" endIcon={!simple && <RestartIcon />}>
-              {simple ? <RestartIcon /> : 'Reset'}
-            </Button>
-          )}
-        </ButtonGroup>
-      </Item>
-    </Grid>
+      <ButtonGroup disableElevation>
+        <Button onClick={() => handleStartPause()} color={param.color as any} endIcon={!simple && param.icon}>
+          {simple ? param.icon : param.title}
+        </Button>
+
+        {savable && (!isActive || isPaused) ? (
+          <Button onClick={handleSave} disabled={!isActive} color="success" endIcon={!simple && <SaveIcon />}>
+            {simple ? <SaveIcon /> : 'Save'}
+          </Button>
+        ) : (
+          <Button onClick={handleReset} disabled={!isActive} color="error" endIcon={!simple && <RestartIcon />}>
+            {simple ? <RestartIcon /> : 'Reset'}
+          </Button>
+        )}
+      </ButtonGroup>
+    </Item>
   );
 };
 export default Stopwatch;

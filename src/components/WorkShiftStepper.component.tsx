@@ -43,7 +43,11 @@ const WorkShiftStepper = () => {
     if (checkNeedSetting(workShiftStep + 1) /* && workShiftStep > 0 */) {
       const operators = workShifts[workShiftStep /*  - 1 */]?.operators || [];
 
-      dispatch(workSlice.actions.initOperators({ operators }));
+      dispatch(
+        workSlice.actions.initOperators({
+          operators: operators.map((e) => ({ ...e, times: [] })),
+        }),
+      );
       openSettings();
     }
   }, [dispatch, checkNeedSetting, openSettings, workShifts, workShiftStep]);

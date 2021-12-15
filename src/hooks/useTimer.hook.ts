@@ -15,7 +15,7 @@ const useTimer = (initialState = 0) => {
     (resettable = false) => {
       handlePause();
       setIsActive(false);
-      if (!resettable || !isPaused) {
+      if (resettable !== true || !isPaused) {
         setTimer(0);
       }
     },
