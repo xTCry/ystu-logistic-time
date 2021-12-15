@@ -44,14 +44,13 @@ const MyRow = (props: { row: IOperator; childIds: number[] }) => {
           ...(isChild && { backgroundColor: theme.palette.action.hover }),
         })}
         hover
-        onClick={() => setOpen(!isOpen)}
       >
         {/* <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!isOpen)}>
             {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell> */}
-        <TableCell component="th" scope="row">
+        <TableCell onClick={() => setOpen(!isOpen)}>
           {id}
           {parentIds.length > 0 && ` (${parentIds.join(', ')})`}
         </TableCell>
