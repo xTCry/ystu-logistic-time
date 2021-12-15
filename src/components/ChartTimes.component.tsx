@@ -1,18 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Chart as ChartJS,
-  LinearScale,
-  CategoryScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Legend,
-  Tooltip,
-} from 'chart.js';
+import 'chart.js/auto';
 import { Chart } from 'react-chartjs-2';
-
-ChartJS.register(LinearScale, CategoryScale, BarElement, PointElement, LineElement, Legend, Tooltip);
 
 const backgroundColors = [
   'rgba(255, 99, 132, 0.5)',
