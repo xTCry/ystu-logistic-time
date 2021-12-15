@@ -44,7 +44,8 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
           <Typography component="h2" variant="h6" color="primary" gutterBottom>
             <b>Ознакомление</b>
           </Typography>
-          <Typography component="h6">Проще следить за операторами и вести статистику</Typography>
+          <Typography>Проще следить за операторами и вести статистику</Typography>
+          <Typography><i>TODO: add reactour</i></Typography>
         </MyPaper>
       );
 
@@ -88,7 +89,7 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
 const InitialWorkSettings = (props: { children: any }) => {
   const { children } = props;
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(qSteps.length);
 
   const handleNext = React.useCallback(() => {
     setActiveStep((v) => ++v);
@@ -96,6 +97,10 @@ const InitialWorkSettings = (props: { children: any }) => {
 
   const handleBack = React.useCallback(() => {
     setActiveStep((v) => --v);
+  }, [setActiveStep]);
+
+  const handleBackConfiguration = React.useCallback(() => {
+    setActiveStep(1);
   }, [setActiveStep]);
 
   return activeStep < qSteps.length ? (
@@ -121,7 +126,7 @@ const InitialWorkSettings = (props: { children: any }) => {
       </Paper>
     </Container>
   ) : (
-    React.cloneElement(children, { handleBack })
+    React.cloneElement(children, { handleBack: handleBackConfiguration })
   );
 };
 

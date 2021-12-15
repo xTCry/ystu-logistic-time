@@ -24,11 +24,9 @@ const AppContainer = (props: { handleBack? }) => {
   const { totalOperatorsCount, workShiftCount, workShiftStep, workShifts } = workState;
   const { operatorsCount } = workShifts[workShiftStep] || {};
 
-
   const handleResetTimes = React.useCallback(() => {
     dispatch(workSlice.actions.handleResetTimes());
   }, [dispatch]);
-
 
   React.useEffect(() => {
     dispatch(workSlice.actions.updateWorkShifts());
@@ -48,10 +46,9 @@ const AppContainer = (props: { handleBack? }) => {
       <Grid container spacing={1}>
         <Grid item xs={12} md={8}>
           <MyPaper>
-            <Button onClick={handleBackToSetting}>Назад к настройкам</Button>
+            <Button onClick={handleBackToSetting}>Конфигурация</Button>
           </MyPaper>
 
-          {/* WorkShift Stepper */}
           <MyPaper>
             <WorkShiftStepper />
           </MyPaper>
@@ -65,7 +62,6 @@ const AppContainer = (props: { handleBack? }) => {
             <Typography component="h6">Отмечайте начало и конец выполнения работы оператора</Typography>
           </MyPaper>
           <MyPaper>
-            {/* TODO: split to ext comp */}
             <OperatorsStopwatch />
           </MyPaper>
         </Grid>
