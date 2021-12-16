@@ -96,6 +96,7 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
           <Typography component="h2" variant="h6" color="primary" gutterBottom>
             <b>Константы и Переменные</b>
           </Typography>
+          <Typography component="h6">Время такта</Typography>
           <FormControl fullWidth>
             <Input
               type="number"
@@ -115,7 +116,7 @@ const StepsWorkSetting = (props: { activeStep: number }) => {
 const InitialWorkSettings = (props: { children: any }) => {
   const { children } = props;
 
-  const [activeStep, setActiveStep] = React.useState(qSteps.length);
+  const [activeStep, setActiveStep] = React.useState(0 /* qSteps.length */);
 
   const handleNext = React.useCallback(() => {
     setActiveStep((v) => ++v);
