@@ -24,7 +24,7 @@ const AppContainer = (props: { handleBack? }) => {
   const workState = useSelector((state) => state.work);
   const { totalOperatorsCount, workShiftCount, workShiftStep, workShifts } = workState;
   const { operators } = workShifts[workShiftStep] || {};
-  const operatorsCount = operators.length;
+  const operatorsCount = operators?.length;
 
   const handleResetTimes = React.useCallback(() => {
     dispatch(workSlice.actions.handleResetTimes());
